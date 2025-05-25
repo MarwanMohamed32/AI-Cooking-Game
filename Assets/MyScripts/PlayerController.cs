@@ -3,11 +3,11 @@ using UnityEngine;
 [RequireComponent(typeof(CharacterController))]
 public class ThirdPersonController : MonoBehaviour
 {
-    public float walkSpeed = 0.2f;
-    public float runSpeed = 0.5f;
-    public float gravity = -9.81f;
-    public Transform cameraTransform;
-    public Animator animator;
+        public float walkSpeed = 0.2f;
+        public float runSpeed = 0.5f;
+        public float gravity = -9.81f;
+        public Transform cameraTransform;
+        public Animator animator;
 
     private CharacterController controller;
     private Vector3 velocity;

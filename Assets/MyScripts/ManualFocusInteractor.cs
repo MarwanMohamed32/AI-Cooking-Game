@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class ManualFocusInteractor : MonoBehaviour
@@ -8,6 +8,8 @@ public class ManualFocusInteractor : MonoBehaviour
 
     public GameObject crosshairUI; // UI circle
     public GameObject promptUI;    // "Press E to interact" text
+
+    public static CookingDevice lastCookingDevice; //  Globally tracks the last interacted cooker
 
     private bool isFocusing = false;
     private IInteractable currentTarget;
@@ -25,7 +27,7 @@ public class ManualFocusInteractor : MonoBehaviour
 
     void Update()
     {
-        // Toggle focus mode
+        // Toggle focus mode (F key)
         if (Input.GetKeyDown(KeyCode.F))
         {
             isFocusing = !isFocusing;
@@ -34,7 +36,7 @@ public class ManualFocusInteractor : MonoBehaviour
             if (!isFocusing && promptUI) promptUI.SetActive(false);
         }
 
-        // Zoom in/out
+        // Smooth zoom effect
         cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, isFocusing ? focusFOV : normalFOV, Time.deltaTime * 6f);
 
         if (isFocusing)
@@ -55,6 +57,10 @@ public class ManualFocusInteractor : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.E) && currentTarget != null)
             {
                 currentTarget.Interact();
+
+                // 👇 Store cooker if it's the thing we're interacting with
+                if (currentTarget is CookingDevice cooker)
+                    lastCookingDevice = cooker;
             }
         }
     }

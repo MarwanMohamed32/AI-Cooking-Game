@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class OpenScript : MonoBehaviour, IInteractable
+public class DoorController : MonoBehaviour, IInteractable, IDoorController
 {
     public Transform door;
     public float openAngle = 90f;
@@ -26,6 +26,16 @@ public class OpenScript : MonoBehaviour, IInteractable
     public void Interact()
     {
         isOpen = !isOpen;
+    }
+
+    public void OpenDoor()
+    {
+        isOpen = true;
+    }
+
+    public void CloseDoor()
+    {
+        isOpen = false;
     }
 
     void Update()

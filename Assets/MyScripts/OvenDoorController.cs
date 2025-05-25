@@ -1,34 +1,32 @@
-using UnityEngine;
+﻿using UnityEngine;
 
-public class OvenDoorController : MonoBehaviour, IInteractable
+public class OvenDoorController : MonoBehaviour, IDoorController
 {
     public Transform ovenDoor;
     public float openAngle = 90f;
     public float speed = 2f;
     public Vector3 rotationAxis = Vector3.right;
 
+    private Quaternion closedRot, openRot;
     private bool isOpen = false;
-    private Quaternion closedRot;
-    private Quaternion openRot;
 
-    void Start()
+    private void Start()
     {
-        if (ovenDoor == null)
-        {
-            ovenDoor = transform;
-            Debug.LogWarning("No oven door assigned. Using self.");
-        }
-
         closedRot = ovenDoor.localRotation;
         openRot = Quaternion.AngleAxis(openAngle, rotationAxis) * closedRot;
     }
 
-    public void Interact()
+    public void OpenDoor()
     {
-        isOpen = !isOpen;
+        isOpen = true;
     }
 
-    void Update()
+    public void CloseDoor()
+    {
+        isOpen = false;
+    }
+
+    private void Update()
     {
         ovenDoor.localRotation = Quaternion.Slerp(
             ovenDoor.localRotation,
