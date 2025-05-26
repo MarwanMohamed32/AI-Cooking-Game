@@ -2,11 +2,10 @@
 using TMPro;
 
 public class CookingDevice : MonoBehaviour, IInteractable
-
 {
     [Header("Cooking Settings")]
     public float cookingDuration = 5f;
-    public TMP_Text timerText;
+    public UnityEngine.UI.Slider progressBar;
     public GameObject fireVFX;
 
     [Header("Input")]
@@ -23,15 +22,20 @@ public class CookingDevice : MonoBehaviour, IInteractable
     private float cookingTimer;
     private CookedItemData cookedItem;
     private InventoryManager inventoryManager;
+    private BirdAssistant birdAssistant;
+    private QuestManager questManager;
+    private int mistakeCount = 0;
 
     private void Start()
     {
         inventoryManager = GameObject.Find("InventoryCanvas")?.GetComponent<InventoryManager>();
+        birdAssistant = FindObjectOfType<BirdAssistant>();
+        questManager = FindObjectOfType<QuestManager>();
 
-        if (timerText != null)
+        if (progressBar != null)
         {
-            timerText.text = "";
-            timerText.gameObject.SetActive(false);
+            progressBar.gameObject.SetActive(false);
+            progressBar.value = 0f;
         }
 
         if (fireVFX != null)
@@ -43,18 +47,20 @@ public class CookingDevice : MonoBehaviour, IInteractable
 
     public void Interact()
     {
-        ToggleInteraction(); // open/close inventory and door
+        ToggleInteraction();
     }
 
     private void Update()
     {
-
         if (isCooking)
         {
             cookingTimer -= Time.deltaTime;
 
-            if (timerText != null)
-                timerText.text = $"Cooking: {Mathf.CeilToInt(cookingTimer)}s";
+            float progress = Mathf.Clamp01(1f - (cookingTimer / cookingDuration));
+            if (progressBar != null)
+            {
+                progressBar.value = progress;
+            }
 
             if (cookingTimer <= 0f)
                 FinishCooking();
@@ -85,6 +91,44 @@ public class CookingDevice : MonoBehaviour, IInteractable
         if (isCooking || data == null)
             return;
 
+        // ✅ Check if this item matches the active quest
+        bool matchesQuest = false;
+        Debug.Log("[CookingDevice] Cooking item: " + data.name);
+        Debug.Log("[CookingDevice] Active quest index: " + questManager.GetActiveQuestIndex());
+
+        if (questManager != null)
+        {
+            switch (questManager.GetActiveQuestIndex())
+            {
+                case 0: matchesQuest = questManager.QuestContainsItem(data.name, 0); break;
+                case 1: matchesQuest = questManager.QuestContainsItem(data.name, 1); break;
+                case 2: matchesQuest = questManager.QuestContainsItem(data.name, 2); break;
+                case 3: matchesQuest = questManager.QuestContainsItem(data.name, 3); break;
+            }
+        }
+
+        // ✅ Let the bird respond
+        if (birdAssistant != null)
+        {
+            if (matchesQuest)
+            {
+                birdAssistant.Say("That’s the right ingredient! You're on fire, chef! 🔥");
+                mistakeCount = 0;
+            }
+            else
+            {
+                mistakeCount++;
+                if (mistakeCount >= 3)
+                {
+                    birdAssistant.Say("You keep messing up... Try cooking what's needed in the quest!");
+                }
+                else
+                {
+                    birdAssistant.Say("Hmm... I don’t think that’s what the quest needs.");
+                }
+            }
+        }
+
         cookedItem = data;
         isCooking = true;
         isOpen = false;
@@ -92,10 +136,13 @@ public class CookingDevice : MonoBehaviour, IInteractable
         cookingTimer = cookingDuration;
 
         inventoryManager?.CloseInventory();
-        doorController?.CloseDoor(); // 🚪 auto close after placing item
+        doorController?.CloseDoor();
 
-        if (timerText != null)
-            timerText.gameObject.SetActive(true);
+        if (progressBar != null)
+        {
+            progressBar.gameObject.SetActive(true);
+            progressBar.value = 0f;
+        }
 
         if (fireVFX != null)
             fireVFX.SetActive(true);
@@ -120,10 +167,10 @@ public class CookingDevice : MonoBehaviour, IInteractable
 
         cookedItem = null;
 
-        if (timerText != null)
+        if (progressBar != null)
         {
-            timerText.text = "";
-            timerText.gameObject.SetActive(false);
+            progressBar.value = 1f;
+            progressBar.gameObject.SetActive(false);
         }
 
         if (fireVFX != null)

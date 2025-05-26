@@ -63,11 +63,21 @@ public class itemSlot : MonoBehaviour, IPointerClickHandler
             quantityText.text = this.quantity.ToString();
             quantityText.enabled = true;
             isFull = true;
+
+            // ⬇️ Added line: check quests after item is added
+            FindObjectOfType<QuestManager>()?.CheckQuests();
+            Debug.Log("[itemSlot] Called QuestManager.CheckQuests()");
+
             return extraItems;
         }
 
         quantityText.text = this.quantity.ToString();
         quantityText.enabled = true;
+
+        // ⬇️ Added line: check quests after item is added
+        FindObjectOfType<QuestManager>()?.CheckQuests();
+        Debug.Log("[itemSlot] Called QuestManager.CheckQuests()");
+
         return 0;
     }
 

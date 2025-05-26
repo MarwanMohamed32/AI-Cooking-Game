@@ -6,10 +6,12 @@ public class ManualFocusInteractor : MonoBehaviour
     public float interactDistance = 3f;
     public LayerMask interactLayerMask;
 
-    public GameObject crosshairUI; // UI circle
-    public GameObject promptUI;    // "Press E to interact" text
+    public GameObject crosshairUI; 
+    public GameObject promptUI;
 
-    public static CookingDevice lastCookingDevice; //  Globally tracks the last interacted cooker
+    public static CookingDevice lastCookingDevice;
+    public GameObject questCanvas;
+
 
     private bool isFocusing = false;
     private IInteractable currentTarget;
@@ -27,7 +29,7 @@ public class ManualFocusInteractor : MonoBehaviour
 
     void Update()
     {
-        // Toggle focus mode (F key)
+        
         if (Input.GetKeyDown(KeyCode.F))
         {
             isFocusing = !isFocusing;
@@ -45,6 +47,8 @@ public class ManualFocusInteractor : MonoBehaviour
 
             if (Physics.Raycast(ray, out RaycastHit hit, interactDistance, interactLayerMask))
             {
+                Debug.Log("[Focus] Hit object: " + hit.collider.name);
+
                 currentTarget = hit.collider.GetComponent<IInteractable>();
                 if (promptUI) promptUI.SetActive(currentTarget != null);
             }
@@ -58,10 +62,10 @@ public class ManualFocusInteractor : MonoBehaviour
             {
                 currentTarget.Interact();
 
-                // 👇 Store cooker if it's the thing we're interacting with
                 if (currentTarget is CookingDevice cooker)
                     lastCookingDevice = cooker;
             }
+
         }
     }
 }

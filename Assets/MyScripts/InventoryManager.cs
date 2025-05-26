@@ -71,12 +71,16 @@ public class InventoryManager:MonoBehaviour
                         isCookable, cookedData, placeablePrefab
                     );
                 }
+              
+
 
                 return 0;
             }
         }
 
         Debug.LogWarning("Inventory is full, couldn't add item.");
+       
+
         return quantity;
     }
 
