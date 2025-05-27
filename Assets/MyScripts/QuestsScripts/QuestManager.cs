@@ -182,6 +182,17 @@ public class QuestManager : MonoBehaviour
     }
 
 
+    public string[] GetActiveQuestItems()
+    {
+        switch (activeQuestIndex)
+        {
+            case 0: return quest1RequiredItems;
+            case 1: return quest2RequiredItems;
+            case 2: return quest3RequiredItems;
+            case 3: return quest4RequiredItems;
+            default: return new string[0];
+        }
+    }
 
 
     private void RefreshQuestUI()

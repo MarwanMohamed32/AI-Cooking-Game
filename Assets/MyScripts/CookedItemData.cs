@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 [System.Serializable]
 public class CookedItemData
@@ -7,4 +7,5 @@ public class CookedItemData
     public int quantity;
     public Sprite sprite;
     public string description;
+    public GameObject placeablePrefab;
 }

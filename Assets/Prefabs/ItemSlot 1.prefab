@@ -113,12 +113,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b70e34041c29099489bb66e4b94121f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isCookable: 0
+  cookedItemData:
+    name: 
+    quantity: 0
+    sprite: {fileID: 0}
+    description: 
   itemName: 
   quantity: 0
   itemSprite: {fileID: 0}
   isFull: 0
   itemDescription: 
-  maxNumberOfItems: 3
+  maxNumberOfItems: 1
   quantityText: {fileID: 6305906685845689273}
   itemImage: {fileID: 3828102786550410404}
   itemDescriptionImage: {fileID: 0}
@@ -126,6 +132,7 @@ MonoBehaviour:
   itemDescriptText: {fileID: 0}
   selectedShader: {fileID: 9128808009324539071}
   thisItemSelected: 0
+  placeablePrefab: {fileID: 0}
 --- !u!1 &7483844367115776857
 GameObject:
   m_ObjectHideFlags: 0

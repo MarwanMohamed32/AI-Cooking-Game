@@ -53,6 +53,10 @@ public class itemSlot : MonoBehaviour, IPointerClickHandler
         itemImage.enabled = true;
         this.itemDescription = itemDescription;
         this.placeablePrefab = placeablePrefab;
+        if (placeablePrefab == null)
+        {
+            Debug.LogWarning("[itemSlot] Missing prefab for " + itemName);
+        }
 
         this.quantity += quantity;
 
@@ -160,7 +164,6 @@ public class itemSlot : MonoBehaviour, IPointerClickHandler
         itemName = "";
         itemDescription = "";
         itemSprite = null;
-        placeablePrefab = null;
         cookedItemData = null;
         isCookable = false;
         thisItemSelected = false;

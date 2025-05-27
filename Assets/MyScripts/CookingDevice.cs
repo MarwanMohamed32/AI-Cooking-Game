@@ -113,20 +113,39 @@ public class CookingDevice : MonoBehaviour, IInteractable
             if (matchesQuest)
             {
                 birdAssistant.Say("That’s the right ingredient! You're on fire, chef! 🔥");
-                mistakeCount = 0;
             }
             else
             {
-                mistakeCount++;
-                if (mistakeCount >= 3)
-                {
-                    birdAssistant.Say("You keep messing up... Try cooking what's needed in the quest!");
-                }
-                else
+                if (mistakeCount == 0)
                 {
                     birdAssistant.Say("Hmm... I don’t think that’s what the quest needs.");
                 }
+                else if (mistakeCount == 1)
+                {
+                    birdAssistant.Say("Try checking the quest list again...");
+                }
+                else if (mistakeCount == 2)
+                {
+                    birdAssistant.Say("You keep messing up... Try cooking what's needed in the quest!");
+                }
+                else if (mistakeCount == 3)
+                {
+                    string[] neededItems = questManager.GetActiveQuestItems();
+                    string hint = "THE MEAL IS : " + string.Join(", ", neededItems) + "!";
+                    birdAssistant.Say(hint);
+                }
+                else if (mistakeCount == 4)
+                {
+                    birdAssistant.Say("WHAT THE HELL ARE YOU DOING?!?!?!");
+                }
+                else
+                {
+                    birdAssistant.Say("...I give up");
+                }
+
+                mistakeCount++; 
             }
+
         }
 
         cookedItem = data;
@@ -156,12 +175,16 @@ public class CookingDevice : MonoBehaviour, IInteractable
 
         if (cookedItem != null && inventoryManager != null)
         {
+            PrefabRegistry.Register(cookedItem.name, cookedItem.placeablePrefab);
             inventoryManager.AddItem(
-                cookedItem.name,
-                cookedItem.quantity,
-                cookedItem.sprite,
-                cookedItem.description
-            );
+            cookedItem.name,
+            cookedItem.quantity,
+            cookedItem.sprite,
+            cookedItem.description,
+            false,
+            null,
+            cookedItem.placeablePrefab
+    );
             Debug.Log($"[CookingDevice] Finished cooking: {cookedItem.name}");
         }
 

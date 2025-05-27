@@ -3,9 +3,10 @@ using UnityEngine.UI;
 
 public class ManualFocusInteractor : MonoBehaviour
 {
+    //Interact Distance With Objects
     public float interactDistance = 3f;
     public LayerMask interactLayerMask;
-
+    //Black Dot That Appears On The Screen
     public GameObject crosshairUI; 
     public GameObject promptUI;
 
@@ -51,7 +52,7 @@ public class ManualFocusInteractor : MonoBehaviour
 
                 currentTarget = hit.collider.GetComponent<IInteractable>();
                 if (promptUI) promptUI.SetActive(currentTarget != null);
-            }
+            }   
             else
             {
                 currentTarget = null;
